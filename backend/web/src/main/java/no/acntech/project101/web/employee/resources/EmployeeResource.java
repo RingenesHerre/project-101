@@ -67,12 +67,12 @@ public class EmployeeResource {
 
         final Employee employee = employeeConverter.convert(employeeDto);
         final Employee saved = employeeService.save(employee);
-//        final URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-//                .path("/{id}")
-//                .buildAndExpand(saved.getId())
-//                .toUri();
+        final URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(saved.getId())
+                .toUri();
 
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.created(uri).build();
     }
 
     @DeleteMapping("{id}")
@@ -93,7 +93,9 @@ public class EmployeeResource {
         final Optional<Company> company = companyService.findById(employeeDto.getCompanyId());
 
 //TODO update the employee that you fetched from db and save it again
-
+        if (optionalEmployee.isPresent() && company.isPresent()){
+            Employee existing 
+        }
             return ResponseEntity.ok(null);
         }
 
