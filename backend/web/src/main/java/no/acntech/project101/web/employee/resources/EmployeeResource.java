@@ -1,41 +1,100 @@
 package no.acntech.project101.web.employee.resources;
 
-import java.util.List;
-
+import no.acntech.project101.company.Company;
+import no.acntech.project101.company.service.CompanyService;
+import no.acntech.project101.employee.Employee;
+import no.acntech.project101.employee.service.EmployeeService;
+import no.acntech.project101.web.employee.resources.converter.EmployeeConverter;
+import no.acntech.project101.web.employee.resources.converter.EmployeeDtoConverter;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000")
-//TODO This is a REST controler and should receive request on path employees
+@RestController
+@RequestMapping("employees")
 public class EmployeeResource {
 
-    //TODO The constructor needs to accept the required dependencies and assign them to class variables
-    public EmployeeResource() {
+    private final EmployeeService employeeService;
+    private final CompanyService companyService;
+    private final EmployeeDtoConverter employeeDtoConverter;
+    private final EmployeeConverter employeeConverter;
+
+    public EmployeeResource(final EmployeeService employeeService,
+                            final CompanyService companyService,
+                            final EmployeeDtoConverter employeeDtoConverter,
+                            final EmployeeConverter employeeConverter) {
+        this.employeeService = employeeService;
+        this.companyService = companyService;
+        this.employeeDtoConverter = employeeDtoConverter;
+        this.employeeConverter = employeeConverter;
     }
 
+    @GetMapping
     public ResponseEntity<List<EmployeeDto>> findAll() {
-        //TODO create a GET endpoint find all employees in the database and return them
-        return null;
+        final List<Employee> employees = employeeService.findAll();
+        final List<EmployeeDto> collect = employees.stream()
+                .map(employeeDtoConverter::convert)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(collect);
     }
 
-    public ResponseEntity<EmployeeDto> findById() {
-        // TODO create a GET endpoint that fetches a spesific employee based on its ID
-        return null;
+    @GetMapping("{id}")
+    public ResponseEntity<EmployeeDto> findById(@PathVariable final Long id) {
+        final Optional<Employee> employee = employeeService.findById(id);
+
+        if (employee.isPresent()) {
+            final EmployeeDto convert = employeeDtoConverter.convert(employee.get());
+            return ResponseEntity.ok(convert);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    public ResponseEntity createEmployee() {
-        //TODO Create a POST endpoint that accepts an employeeDTO and saves it in the database
+    @PostMapping
+    public ResponseEntity createEmployee(@RequestBody final EmployeeDto employeeDto) {
+        final Optional<Company> company = companyService.findById(employeeDto.getCompanyId());
 
-        return null;
+        if(!company.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
+
+        final Employee employee = employeeConverter.convert(employeeDto);
+        final Employee saved = employeeService.save(employee);
+//        final URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(saved.getId())
+//                .toUri();
+
+        return ResponseEntity.created(null).build();
     }
 
-    public ResponseEntity deleteEmployee() {
-        // TODO Create a DELETE endpoint that deletes a specific employee
-        return null;
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteEmployee(@PathVariable final Long id) {
+        final Optional<Employee> employee = employeeService.findById(id);
+
+        if (employee.isPresent()) {
+            employeeService.delete(id);
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    public ResponseEntity updateEmployee() {
-        //TODO Create a PATCH endpoint that updates an employee with new values
-        return null;
-    }
+    @PatchMapping("{id}")
+    public ResponseEntity updateEmployee(@PathVariable final Long id, @RequestBody final EmployeeDto employeeDto) {
+        final Optional<Employee> optionalEmployee = employeeService.findById(id);
+        final Optional<Company> company = companyService.findById(employeeDto.getCompanyId());
+
+//TODO update the employee that you fetched from db and save it again
+
+            return ResponseEntity.ok(null);
+        }
+    
 }
