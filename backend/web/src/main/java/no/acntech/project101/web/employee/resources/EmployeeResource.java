@@ -96,5 +96,5 @@ public class EmployeeResource {
 
             return ResponseEntity.ok(null);
         }
-    
+
 }
