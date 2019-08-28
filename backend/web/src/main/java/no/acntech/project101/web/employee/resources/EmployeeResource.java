@@ -94,7 +94,7 @@ public class EmployeeResource {
 
 //TODO update the employee that you fetched from db and save it again
         if (optionalEmployee.isPresent() && company.isPresent()){
-            Employee existing 
+            Employee existing
         }
             return ResponseEntity.ok(null);
         }
