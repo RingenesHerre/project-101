@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CompanyListPage from './pages/CompanyListPage';
+import EmployeeListPage from './pages/EmployeeListPage';
 import NavigationAppBar from './components/NavigationAppBar';
 import { Route, Switch } from 'react-router-dom';
 import NotFoundPage from './pages/NotFoundPage';
@@ -48,6 +49,7 @@ class App extends Component {
                     <Switch>
                         <Route exact path="/" component={FrontPage} />
                         <Route path="/companies" component={CompanyListPage} />
+                        <Route path="/employee" component={EmployeeListPage} />
                         <Route component={NotFoundPage} />
                     </Switch>
                 </main>

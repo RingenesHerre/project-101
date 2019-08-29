@@ -12,6 +12,9 @@ function FrontPage() {
             <p className="lead">
                 <Button tag={Link} color="primary" size="lg" to="/companies"><FaBuilding /> Companies</Button> {' '}
             </p>
+            <p className="lead">
+            <Button tag={Link} color="primary" size="lg" to="/employees"><FaBuilding /> Employees</Button> {' '}
+            </p>
         </Jumbotron>
     );
 }
