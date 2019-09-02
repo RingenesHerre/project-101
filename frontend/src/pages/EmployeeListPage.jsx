@@ -1,4 +1,10 @@
 import React, {Component} from 'react';
+import CardBody from "reactstrap/es/CardBody";
+import {FaSyncAlt} from "react-icons";
+import Button from "reactstrap/es/Button";
+import Card from "reactstrap/es/Card";
+import CardTitle from "reactstrap/es/CardTitle";
+import CardText from "reactstrap/es/CardText";
 
 
 class EmployeeListPage extends Component {
@@ -53,9 +59,30 @@ class EmployeeListPage extends Component {
                         <th scope="col">actions</th>
                     </tr>
                 </thead>
+                <tbody>
+                    //employeeRows
+                </tbody>
+            </Table>
+        );
 
-        )
+        const emptyTable = (
+            <p>No employees yet, use button above to add one!</p>
+        );
 
+        return (
+            <Card color = "white" className="shadow p-3 mb-5 rounded">
+                <CardBody>
+                    <CardTitle tag="h3"><FaBuilding /> List of employees</CardTitle>
+                    <div className="card-action">
+                        <Button color="secondary" onClick={this.apiReadAllEmployees}><FaSyncAlt /></Button> {' '}
+                        <CreateEmployeeModal onCreated={this.apiReadAllEmployees} />
+                    </div>
+                    <CardText tag="div">
+                        {employees.length > 0 ? employeesTable : emptyTable}
+                    </CardText>
+                </CardBody>
+            </Card>
+        );
     }
 }
 
